@@ -1,0 +1,37 @@
+﻿@model School.Domain.Core.Student
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Создание ученика</div>
+    <form id="form_student" asp-action="Create" class="panel-body">
+        <div class="panel-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="ID" type="hidden" value="0" />
+            </div>
+            <div class="form-group">
+                <label asp-for="GradeID" class="control-label required"></label>
+                <select id="grades" asp-for="GradeID" asp-items="ViewBag.Grades" class="form-control"></select>
+                <a id="create_class" data-toggle="popover">или создайте новый класс</a>
+            </div>
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label required"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label required"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group modal-footer ">
+            <input type="button" value="Сохранить" class="btn btn-outline btn-primary" onclick="dialog.save('Create')" />
+            <input type="button" value="Закрыть" class="btn btn-outline btn-primary" onclick="dialog.close(); return false;" />
+        </div>
+    </form>
+</div>
+
+<script>
+    //отображение tooltip-a для создании класса
+    tooltip.init();
+</script>

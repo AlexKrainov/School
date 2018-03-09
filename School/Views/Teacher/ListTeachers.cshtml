@@ -1,0 +1,59 @@
+﻿@model IEnumerable<School.Domain.Core.Teacher>
+@{
+    int currentNumber = 0;
+}
+<!-- context menu -->
+<ul id="context-menu" class="dropdown-menu">
+    @*<li data-item="create"><a>Создать</a></li>*@
+    <li data-item="edit"><a>Редактировать</a></li>
+    <li data-item="delete"><a>Удалить</a></li>
+</ul>
+
+<div id="toolbar" class="btn-group">
+    <button type="button" class="btn btn-default" onclick="dialog.create_teacher()" title="Добавить">
+        <i class="glyphicon glyphicon-plus"></i>
+    </button>
+    <button type="button" class="btn btn-default" title="Редактировать" onclick="dialog.edit_teacher($('.success').find('td:first').attr('data-id'));">
+        <i class="glyphicon glyphicon-edit"></i>
+    </button>
+    <button type="button" class="btn btn-default" title="Удалить" onclick="server.remove_teacher($('.success').find('td:first').attr('data-id'));">
+        <i class="glyphicon glyphicon-trash"></i>
+    </button>
+</div>
+<table id="teacher_table" class="table table-hover">
+    <thead>
+        <tr>
+            <th data-sortable="true" data-align="center" data-halign="center" data-width="75px">
+                №
+            </th>
+            <th data-sortable="true" data-align="center" data-halign="center">
+                ФИО
+            </th>
+            <th data-sortable="true" data-align="center" data-halign="center">
+                Предметы
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            currentNumber++;
+            string subjects = default(string);
+            <tr>
+                <td data-id="@item.ID">@currentNumber</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+                <td>
+                    @foreach (var subject in item.Subjects)
+                    {
+                        subjects += subject.Name + ", ";
+                    }
+                    @subjects
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

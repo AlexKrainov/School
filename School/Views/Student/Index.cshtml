@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "Таблица учениками";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*@Html.Partial("ListStudents", ViewData["Students"])*@
+<div class="row" style="margin-top: 15px;">
+    <div class="col-xs-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Таблица учащихся
+            </div>
+            <div class="panel-body" id="student_container">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog window -->
+<div id="dialog_container"></div>
+
+<ul>
+    <li>
+        Все действия над таблицей можно совершать:
+        <ul>
+            <li>либо нажимая на кнопки над таблицей</li>
+            <li>либо вызывая контекстное меню при выборе строчки таблицы</li>
+            <li>либо дабл-кликом на строчку</li>
+        </ul>
+</ul>
+<script src="~/js/bootstrap-table/components/student_controller.js"></script>

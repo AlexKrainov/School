@@ -1,0 +1,157 @@
+﻿@model School.Domain.Core.ViewModel.ScheduleView
+@using School.App_Code.HtmlHelpers
+@{
+    ViewData["Title"] = "Расписание";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    List<School.Domain.Core.Schedule> schedules = (List<School.Domain.Core.Schedule>)ViewBag.Schedules;
+    List<School.Domain.Core.LessonTime> lessontsTime = (List<School.Domain.Core.LessonTime>)ViewBag.LessonTime;
+    List<School.Domain.Core.Teacher> teachers = (List<School.Domain.Core.Teacher>)ViewBag.Teachers;
+    School.Domain.Core.ViewModel.DatesOfWeek dates = (School.Domain.Core.ViewModel.DatesOfWeek)ViewBag.DateManager;
+}
+<div class="row">
+    <form id="schedule_panel" asp-action="Index" class="col-md-6 col-md-offset-3">
+        <select asp-for="GradeID" asp-items="ViewBag.Grades" class="form-control  d-inline-block" style="width:100px;"></select>
+        <input type="week" asp-for="Week" class="form-control d-inline-block" style="width: 200px;" />
+        <input type="submit" value="Применить" class="btn btn-primary" />
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="schedule_table" class="table table-bordered">
+                        <tr>
+                            <th class="col-md-1" style="width: 150px;">Время/Дни недели</th>
+                            <th class="col-md-2" data-date="@dates.MondayDate.ToShortDateString()">
+                                @dates.Monday @dates.MondayDate.ToShortDateString()
+                            </th>
+                            <th class="col-md-2" data-date="@dates.TuesdayDate.ToShortDateString()">
+                                @dates.Tuesday @dates.TuesdayDate.ToShortDateString()
+                            </th>
+                            <th class="col-md-2" data-date="@dates.WednesdayDate.ToShortDateString()">
+                                @dates.Wednesday @dates.WednesdayDate.ToShortDateString()
+                            </th>
+                            <th class="col-md-2" data-date="@dates.ThursdayDate.ToShortDateString()">
+                                @dates.Thursday @dates.ThursdayDate.ToShortDateString()
+                            </th>
+                            <th class="col-md-2" data-date="@dates.FridayDate.ToShortDateString()">
+                                @dates.Friday @dates.FridayDate.ToShortDateString()
+                            </th>
+                        </tr>
+                        <tbody>
+                            @for (int i = 0; i < lessontsTime.Count; i++)
+                            {
+                                <tr>
+                                    <th data-lesson-id="@lessontsTime[i].ID">@lessontsTime[i].Time</th>
+                                    <td>
+                                        @{
+                                            var schedule = schedules.FirstOrDefault(x => x.Date == dates.MondayDate
+                                            && x.TimeID == lessontsTime[i].ID);
+
+                                            if (schedule != null)
+                                            {
+                                                @Html.CreateTeacherContainer(schedule.Teacher, schedule.ID)
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            schedule = schedules.FirstOrDefault(x => x.Date == dates.TuesdayDate
+                                            && x.TimeID == lessontsTime[i].ID);
+
+                                            if (schedule != null)
+                                            {
+                                                @Html.CreateTeacherContainer(schedule.Teacher, schedule.ID)
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            schedule = schedules.FirstOrDefault(x => x.Date == dates.WednesdayDate
+                                            && x.TimeID == lessontsTime[i].ID);
+
+                                            if (schedule != null)
+                                            {
+                                                @Html.CreateTeacherContainer(schedule.Teacher, schedule.ID)
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            schedule = schedules.FirstOrDefault(x => x.Date == dates.ThursdayDate
+                                            && x.TimeID == lessontsTime[i].ID);
+
+                                            if (schedule != null)
+                                            {
+                                                @Html.CreateTeacherContainer(schedule.Teacher, schedule.ID)
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            schedule = schedules.FirstOrDefault(x => x.Date == dates.FridayDate
+                                            && x.TimeID == lessontsTime[i].ID);
+
+                                            if (schedule != null)
+                                            {
+                                                @Html.CreateTeacherContainer(schedule.Teacher, schedule.ID)
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <span id="error_message" class="editable-error-block help-block pull-right" style="display: none; color: red;"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4 col-md-4">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Преподаватели:
+            </div>
+            <div class="panel-body">
+                @if (Model != null && string.IsNullOrEmpty(Model.Week) == false)
+                {
+                    <ul class="chat" id="teachers">
+                        @for (int i = 0; i < teachers.Count; i++)
+                        {
+                            <li class="left clearfix">
+                                @Html.CreateTeacherContainer(teachers[i])
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .col-md-6.col-md-offset-3 input, .col-md-6.col-md-offset-3 select {
+        display: inline-block;
+    }
+
+    ul.chat li {
+        cursor: pointer;
+        background-color: #F0F0F0;
+        border-radius: 5px;
+    }
+</style>
+
+<ul>
+    <li>Выбираем класс</li>
+    <li>Выбираем неделю</li>
+    <li>Нажимаем "Применить"</li>
+    <li>Перетаскиваем преподавателей</li>
+</ul>
+
+<link href="~/js/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<script src="~/js/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/js/Schedule_controller.js"></script>
